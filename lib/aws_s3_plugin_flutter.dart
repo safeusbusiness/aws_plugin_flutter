@@ -5,24 +5,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class AwsS3PluginFlutter {
-  final File file;
+
+  final File? file;
   final String fileNameWithExt;
   final String awsFolderPath;
   final String? poolId;
-  final Regions region;
+  final Regions? region;
   final String bucketName;
   final String awsAccess;
   final String awsSecret;
 
   AwsS3PluginFlutter({
-    required this.file,
     required this.fileNameWithExt,
     required this.awsFolderPath,
-    this.poolId,
-    this.region = Regions.US_WEST_2,
     required this.bucketName,
     required this.awsAccess,
     required this.awsSecret,
+    this.poolId,
+    this.region = Regions.US_WEST_2,
+    this.file,
   });
 
   static const EventChannel _eventChannel =
@@ -33,7 +34,7 @@ class AwsS3PluginFlutter {
 
   Future<String> get uploadFile async {
     Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("filePath", () => file.path);
+    args.putIfAbsent("filePath", () => file?.path);
     args.putIfAbsent("awsFolder", () => awsFolderPath);
     args.putIfAbsent("fileNameWithExt", () => fileNameWithExt);
     args.putIfAbsent("region", () => region.toString());
@@ -41,7 +42,7 @@ class AwsS3PluginFlutter {
     args.putIfAbsent("AWSSecret", () => awsSecret);
     args.putIfAbsent("AWSAccess", () => awsAccess);
 
-    debugPrint("AwsS3Plugin: file path is: ${file.path}");
+    debugPrint("AwsS3Plugin: file path is: ${file?.path}");
 
     final String result = await _channel.invokeMethod('uploadToS3', args);
 
